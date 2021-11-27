@@ -1,0 +1,73 @@
+server:
+  port: ${PORT:8183}
+
+app:
+  qty:
+    limit: 10
+    enabled: true
+
+spring:
+  application:
+    name: inventory
+  datasource:
+    url: "jdbc:h2:mem:testdb"
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 120
+      slidingWindowType: TIME_BASED
+      failureRateThreshold: 49
+      slowCallDurationThreshold: 30000
+      slowCallRateThreshold: 74
+      permittedNumberOfCallsInHalfOpenState: 2
+      #      maxWaitDurationInHalfOpenState: 0
+      minimumNumberOfCalls: 4
+      waitDurationInOpenState: 30000
+      automaticTransitionFromOpenToHalfOpenEnabled: false
+  instances:
+    SLOW:
+      baseConfig: default
+      slidingWindowSize: 100
+    FAST:
+      baseConfig: default
+      slidingWindowSize: 60
+
+resilience4j.timelimiter:
+  instances:
+    backendA:
+      timeoutDuration: 2s
+      cancelRunningFuture: true
+    backendB:
+      timeoutDuration: 1s
+      cancelRunningFuture: false
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health, info, circuitbreakers
+  endpoint:
+    info:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+      enabled: true
+      show-details: always
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+    defaults:
+      enabled: true
+    circuitbreakers:
+      enabled: true
