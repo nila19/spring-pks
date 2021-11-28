@@ -17,6 +17,10 @@ public class AppProps {
      */
     private long limit;
     /**
+     * Adjustment allowed for each item quantity.
+     */
+    private long adjustment;
+    /**
      * Flag to indicate if quantity check is enabled.
      */
     private boolean enabled;

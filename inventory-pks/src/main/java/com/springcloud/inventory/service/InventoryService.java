@@ -21,7 +21,8 @@ public class InventoryService {
 
   @PostConstruct
   public void init() {
-    log.info("Qty limit = [{}]", this.appProps.getQty().getLimit());
+    AppProps.Qty qty = this.appProps.getQty();
+    log.info("Qty Limit = [{}], Adjustment = [{}]", qty.getLimit(), qty.getAdjustment());
   }
 
   public Order process(Order order) {
