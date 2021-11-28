@@ -2,6 +2,7 @@ package com.springcloud.inventory;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.springcloud.inventory.service.Inventory2Service;
 import com.springcloud.inventory.service.InventoryService;
 import com.springcloud.inventory.service.RestService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class InventoryController {
 
   private final InventoryService inventoryService;
   private final RestService restService;
+  private final Inventory2Service inventory2Service;
 
   @PostMapping(value = "/process", consumes = JSON, produces = JSON)
   public ResponseEntity<Order> process(@RequestBody Order order) {
@@ -36,7 +38,12 @@ public class InventoryController {
   }
 
   @PostMapping(value = "/restSlow", consumes = JSON, produces = JSON)
-  public ResponseEntity<Order> restSlow(@RequestBody OrderWithUrl input) {
-    return ResponseEntity.ok(this.restService.makeRestCallSlow(input));
+  public ResponseEntity<Order> restSlow(@RequestBody OrderWithUrl input) throws Exception {
+    return ResponseEntity.ok(this.inventory2Service.makeRestCallSlow(input));
+  }
+
+  @PostMapping(value = "/calc")
+  public ResponseEntity<Integer> calc() {
+    return ResponseEntity.ok(this.inventory2Service.calculate(5, 10));
   }
 }
