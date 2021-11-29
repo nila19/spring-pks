@@ -6,6 +6,9 @@ spring:
       #      enabled: ${KUBERNETES:true}
       client:
         namespace: default
+      loadbalancer:
+        enabled: true
+        mode: service
       reload:
         enabled: ${KUBERNETES:true}
         strategy: refresh
